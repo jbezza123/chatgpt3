@@ -17,7 +17,7 @@ import pickle
 import datetime
 
 # Use your OpenAI API key
-openai.api_key = "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"
+openai.api_key = "YOUR API KEY HERE"
 
 _script = sys.argv[0]
 _location = os.path.dirname(_script)
