@@ -16,6 +16,8 @@ You will need to have the following installed on your local machine:
 - Python 3.8+
 - Tkinter (should come with Python)
 - openai (`pip install openai`)
+- regex (`pip install regex`)
+- nltk (`pip install nltk`)
 
 ### Running the program
 
