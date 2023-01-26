@@ -15,6 +15,7 @@ from tkinter import scrolledtext
 from tkinter import filedialog
 import pickle
 import datetime
+import threading
 
 openai.api_key = "YOUR API KEY HERE"
 
