@@ -145,7 +145,8 @@ class Toplevel1:
         thread.start()
 
     
-    def get_response_thread(self, user_message):    
+    def get_response_thread(self, user_message):
+        self.chatbox.see(END)
         response = openai.Completion.create(
             engine="text-davinci-003",
             prompt='\n'.join(self.conversation_context) + user_message,
@@ -153,27 +154,18 @@ class Toplevel1:
         )
         bot_response = response["choices"][0]["text"]
         bot_response = add_code_tags(bot_response)
-        if bot_response == "":
+        self.timestamp = datetime.datetime.now().strftime("[%Y-%m-%d %H:%M:%S] ")
 
-            self.chatbox.tag_config('left', foreground='black', background='light green')
-            self.new_avatar = self.avatar2.copy()
-            self.chatbox.insert('end', "\n ", 'left')
-            self.chatbox.window_create('end', window=tk.Label(self.chatbox, image=self.avatar2))
+        self.chatbox.tag_config('left', foreground='black', background='light green')
+        self.chatbox.insert('end', "\n ", 'left')
+        self.chatbox.window_create('end', window=tk.Label(self.chatbox, image=self.avatar2))
+        if bot_response == "":
             self.chatbox.insert('end', '\n\n' +"[No Response given]"+ '\n\n\n', 'left')
-            self.timestamp = datetime.datetime.now().strftime("[%Y-%m-%d %H:%M:%S] ")
-            self.conversation_context.append(user_message)
-            self.conversation_context.append(bot_response)
-            self.userinput.delete("1.0", 'end')
         else:
-            self.chatbox.tag_config('left', foreground='black', background='light green')
-            self.new_avatar = self.avatar2.copy()
-            self.chatbox.insert('end', "\n ", 'left')
-            self.chatbox.window_create('end', window=tk.Label(self.chatbox, image=self.avatar2))
             self.chatbox.insert('end', bot_response + '\n\n\n', 'left')
-            self.timestamp = datetime.datetime.now().strftime("[%Y-%m-%d %H:%M:%S] ")
-            self.conversation_context.append(user_message)
-            self.conversation_context.append(bot_response)
-            self.userinput.delete("1.0", 'end')
+        self.conversation_context.append(user_message)
+        self.conversation_context.append(bot_response)
+        self.userinput.delete("1.0", 'end')
         self.chatbox.see(END)
             
 
