@@ -29,6 +29,9 @@ cd chatgpt3
 3. Run the program
 python chat.py
 
+4. Write anything in the input box,
+press send
+
 
 ## Built With
 
