@@ -140,8 +140,8 @@ class Toplevel1:
         self.load_conversation = tk.Button(self.top, command=lambda: load_conversation(self.conversation_context))
         self.load_conversation.place(relx=0.9, rely=0.01, height=24, width=50)
         self.load_conversation.configure(text='Load')
-
-        self.send_file = tk.Button(self.top, command=lambda: send_file(self.conversation_context, self.chatbox, self.avatar1, self.get_response_thread))
+        self.photo = tk.PhotoImage(file="photo.png")
+        self.send_file = tk.Button(self.top,image=self.photo, command=lambda: send_file(self.conversation_context, self.chatbox, self.avatar1, self.get_response_thread))
         self.send_file.place(relx=0.955, rely=0.9, height=20, width=20)
         self.send_file.configure(text='↑')
 
@@ -201,4 +201,5 @@ if __name__ == '__main__':
     top.deiconify()
     Toplevel1(top)
     top.mainloop()
+
 
