@@ -27,7 +27,7 @@ git clone https://github.com/jbezza123/chatgpt3.git
 cd chatgpt3
 
 3. Run the program
-python main.py
+python chat.py
 
 
 ## Built With
