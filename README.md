@@ -45,7 +45,8 @@ press send
 
 ## Problems
 
-* Does not remember previous conversations loaded from file
+* Does not remember previous conversations loaded from file.
+* Avatars follow the lastes messages - need to redraw previous messages.
 
 
 
