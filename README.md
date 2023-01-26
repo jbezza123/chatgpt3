@@ -18,6 +18,7 @@ You will need to have the following installed on your local machine:
 - openai (`pip install openai`)
 - regex (`pip install regex`)
 - nltk (`pip install nltk`)
+- openai api key https://beta.openai.com/account/api-keys
 
 ### Running the program
 
