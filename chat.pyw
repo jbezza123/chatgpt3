@@ -17,7 +17,8 @@ import pickle
 import datetime
 import threading
 
-openai.api_key = "YOUR API KEY HERE"
+# Use your OpenAI API key
+openai.api_key = "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"
 
 _script = sys.argv[0]
 _location = os.path.dirname(_script)
@@ -74,7 +75,7 @@ class Toplevel1:
         top.configure(background="#7588cc")
 
         self.top = top
- 
+        
         self.chatbox = scrolledtext.ScrolledText(self.top)
         self.chatbox.place(relx=0.007, rely=0.067, relheight=0.787, relwidth=0.9845)
         self.chatbox.configure(background="white")
@@ -88,8 +89,7 @@ class Toplevel1:
         self.chatbox.configure(wrap='word')
         
         self.userinput = tk.Text(self.top)
-        self.userinput.place(relx=0.017, rely=0.867, relheight=0.12
-                , relwidth=0.74)
+        self.userinput.place(relx=0.017, rely=0.867, relheight=0.12, relwidth=0.74)
         self.userinput.configure(background="white")
         self.userinput.configure(font="TkTextFont")
         self.userinput.configure(foreground="black")
@@ -114,6 +114,9 @@ class Toplevel1:
         self.send.configure(pady="0")
         self.send.configure(text='''Send''')
         self.send.configure(command=self.handle_conversation)
+        
+        self.avatar2 = tk.PhotoImage(file="chat.png")
+        self.avatar1 = tk.PhotoImage(file="avatar.png")
 
         self.save_conversation = tk.Button(self.top, command=lambda: save_conversation(self.conversation_context))
         self.save_conversation.place(relx=0.8, rely=0.01, height=24, width=50)
@@ -132,14 +135,16 @@ class Toplevel1:
     def handle_conversation(self):
         user_message = self.userinput.get("1.0", 'end-1c')
         self.chatbox.tag_config('right', foreground='black', justify='right', background='light blue')
-        self.avatar1 = tk.PhotoImage(file="avatar.png")
+        new_avatar = self.avatar1.copy()
         self.chatbox.insert('end', "\n ", 'right')
         self.chatbox.window_create('end', window=tk.Label(self.chatbox, image=self.avatar1))
         self.chatbox.insert('end', '\n\n' + user_message + '\n\n\n', 'right')
-        self.chatbox.see(END)
+
+
         thread = threading.Thread(target=self.get_response_thread, args=(user_message,))
         thread.start()
 
+    
     def get_response_thread(self, user_message):    
         response = openai.Completion.create(
             engine="text-davinci-003",
@@ -149,8 +154,9 @@ class Toplevel1:
         bot_response = response["choices"][0]["text"]
         bot_response = add_code_tags(bot_response)
         if bot_response == "":
+
             self.chatbox.tag_config('left', foreground='black', background='light green')
-            self.avatar2 = tk.PhotoImage(file="chat.png")
+            self.new_avatar = self.avatar2.copy()
             self.chatbox.insert('end', "\n ", 'left')
             self.chatbox.window_create('end', window=tk.Label(self.chatbox, image=self.avatar2))
             self.chatbox.insert('end', '\n\n' +"[No Response given]"+ '\n\n\n', 'left')
@@ -160,7 +166,7 @@ class Toplevel1:
             self.userinput.delete("1.0", 'end')
         else:
             self.chatbox.tag_config('left', foreground='black', background='light green')
-            self.avatar2 = tk.PhotoImage(file="chat.png")
+            self.new_avatar = self.avatar2.copy()
             self.chatbox.insert('end', "\n ", 'left')
             self.chatbox.window_create('end', window=tk.Label(self.chatbox, image=self.avatar2))
             self.chatbox.insert('end', bot_response + '\n\n\n', 'left')
