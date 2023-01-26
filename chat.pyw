@@ -16,7 +16,6 @@ from tkinter import filedialog
 import pickle
 import datetime
 
-# Use your OpenAI API key
 openai.api_key = "YOUR API KEY HERE"
 
 _script = sys.argv[0]
@@ -74,7 +73,7 @@ class Toplevel1:
         top.configure(background="#7588cc")
 
         self.top = top
-        #chatbox
+ 
         self.chatbox = scrolledtext.ScrolledText(self.top)
         self.chatbox.place(relx=0.007, rely=0.067, relheight=0.787, relwidth=0.9845)
         self.chatbox.configure(background="white")
@@ -86,7 +85,7 @@ class Toplevel1:
         self.chatbox.configure(selectbackground="#c4c4c4")
         self.chatbox.configure(selectforeground="black")
         self.chatbox.configure(wrap='word')
-        #user input
+        
         self.userinput = tk.Text(self.top)
         self.userinput.place(relx=0.017, rely=0.867, relheight=0.12
                 , relwidth=0.74)
@@ -99,7 +98,7 @@ class Toplevel1:
         self.userinput.configure(selectbackground="#c4c4c4")
         self.userinput.configure(selectforeground="black")
         self.userinput.configure(wrap="word")
-        #send button
+        
         self.send = tk.Button(self.top)
         self.send.place(relx=0.767, rely=0.867, height=44, width=107)
         self.send.configure(activebackground="#4b65bc")
@@ -115,12 +114,9 @@ class Toplevel1:
         self.send.configure(text='''Send''')
         self.send.configure(command=self.handle_conversation)
 
-        # Add the save button
         self.save_conversation = tk.Button(self.top, command=lambda: save_conversation(self.conversation_context))
         self.save_conversation.place(relx=0.8, rely=0.01, height=24, width=50)
         self.save_conversation.configure(text='Save')
-
-        # Add the load button
         self.load_conversation = tk.Button(self.top, command=lambda: load_conversation(self.conversation_context))
         self.load_conversation.place(relx=0.9, rely=0.01, height=24, width=50)
         self.load_conversation.configure(text='Load')
@@ -139,17 +135,19 @@ class Toplevel1:
         self.chatbox.insert('end', "\n ", 'right')
         self.chatbox.window_create('end', window=tk.Label(self.chatbox, image=self.avatar1))
         self.chatbox.insert('end', '\n\n' + user_message + '\n\n\n', 'right')
-        # Use the OpenAI API to generate a response
+        self.chatbox.see(END)
+        thread = threading.Thread(target=self.get_response_thread, args=(user_message,))
+        thread.start()
+
+    def get_response_thread(self, user_message):    
         response = openai.Completion.create(
             engine="text-davinci-003",
             prompt='\n'.join(self.conversation_context) + user_message,
             max_tokens=1000
         )
-        # Extract the generated response
         bot_response = response["choices"][0]["text"]
         bot_response = add_code_tags(bot_response)
         if bot_response == "":
-            # Insert the bot's response into the chatbox
             self.chatbox.tag_config('left', foreground='black', background='light green')
             self.avatar2 = tk.PhotoImage(file="chat.png")
             self.chatbox.insert('end', "\n ", 'left')
@@ -160,7 +158,6 @@ class Toplevel1:
             self.conversation_context.append(bot_response)
             self.userinput.delete("1.0", 'end')
         else:
-            # Insert the bot's response into the chatbox
             self.chatbox.tag_config('left', foreground='black', background='light green')
             self.avatar2 = tk.PhotoImage(file="chat.png")
             self.chatbox.insert('end', "\n ", 'left')
