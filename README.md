@@ -45,13 +45,14 @@ press send
 
 ## Known issues
 
-* Does not remember previous conversations loaded from file.
+
 
 
 ## Fixed issues
 
 * Included threading to stop gui freezing.
 * Avatars follow the lastes messages.
+* Does not remember previous conversations loaded from file.
 
 
 ## Authors
