@@ -59,7 +59,7 @@ def load_conversation(conversation_context):
     if filepath:
         with open(filepath, "rb") as f:
             conversation = pickle.load(f)
-        conversation_context = conversation
+        conversation_context += conversation
 
         
 class Toplevel1:
