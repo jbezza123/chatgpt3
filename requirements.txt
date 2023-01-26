@@ -1,0 +1,5 @@
+sys
+tkinter
+regex
+nltk
+datetime
