@@ -9,15 +9,18 @@ A simple GUI chatbot using OpenAI's GPT-3 API.
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
+## Features
+* Upload text based files `.txt`, `.html` `.php` `.py` `.js` `.css` `.xml` `.csv` `.rtf` `.md` `.json` `.log` `.yml` `.ini` `.conf` `.markdown` `.sql` `.java` `.c` `.cpp` `.h` `.sh` `.pl`
+
 ### Prerequisites
 
 You will need to have the following installed on your local machine:
 
 - Python 3.8+
 - Tkinter (should come with Python)
-- openai (`pip install openai`)
-- regex (`pip install regex`)
-- nltk (`pip install nltk`)
+- openai `pip install openai`
+- regex `pip install regex`
+- nltk `pip install nltk`
 - openai api key https://beta.openai.com/account/api-keys
 
 ### Running the program
@@ -45,7 +48,7 @@ press send
 * [OpenAI](https://openai.com/) - GPT-3 API (if it is used)
 
 ## Known issues
-
+* Using the file upload button will only work mid conversation as the ai will getn confused and just wont reply afterwards
 
 
 
