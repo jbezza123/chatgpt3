@@ -1,4 +1,4 @@
-# ChatGPT3
+# ChatGPT3 chatbot
 
 A simple GUI chatbot using OpenAI's GPT-3 API.
 
@@ -33,8 +33,11 @@ python main.py
 ## Built With
 
 * [Python](https://www.python.org/) - The programming language used
-* [OpenAI](https://openai.com/) - GPT-3 API
 * [Tkinter](https://docs.python.org/3/library/tk.html) - Python's standard GUI library
+* [regex](https://pypi.org/project/regex/) - A library for working with regular expressions
+* [nltk](https://www.nltk.org/) - A library for natural language processing
+* [OpenAI](https://openai.com/) - GPT-3 API (if it is used)
+
 
 ## Authors
 
