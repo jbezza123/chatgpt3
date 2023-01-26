@@ -43,7 +43,7 @@ press send
 * [nltk](https://www.nltk.org/) - A library for natural language processing
 * [OpenAI](https://openai.com/) - GPT-3 API (if it is used)
 
-## Problems
+## Known issues
 
 * Does not remember previous conversations loaded from file.
 * Avatars follow the lastes messages - need to redraw previous messages.
