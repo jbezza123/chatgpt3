@@ -62,6 +62,22 @@ def load_conversation(conversation_context):
         conversation_context += conversation
 
         
+def send_file(conversation_context, chatbox, avatar1, get_response_thread):
+    filepath = filedialog.askopenfilename(filetypes=[("All Files", "*.*")])
+    if filepath:
+        with open(filepath, "r") as f:
+            conversation = f.read()
+        conversation_context.append(conversation)
+        user_message = conversation
+        chatbox.tag_config('right', foreground='black', justify='right', background='light blue')
+        new_avatar = avatar1.copy()
+        chatbox.insert('end', "\n ", 'right')
+        chatbox.window_create('end', window=tk.Label(chatbox, image=avatar1))
+        chatbox.insert('end', '\n\n' + user_message + '\n\n\n', 'right')
+        thread = threading.Thread(target=get_response_thread, args=(user_message,))
+        thread.start()
+
+        
 class Toplevel1:
     def __init__(self, top=None):
         '''This class configures and populates the toplevel window.
@@ -124,6 +140,10 @@ class Toplevel1:
         self.load_conversation = tk.Button(self.top, command=lambda: load_conversation(self.conversation_context))
         self.load_conversation.place(relx=0.9, rely=0.01, height=24, width=50)
         self.load_conversation.configure(text='Load')
+
+        self.send_file = tk.Button(self.top, command=lambda: send_file(self.conversation_context, self.chatbox, self.avatar1, self.get_response_thread))
+        self.send_file.place(relx=0.955, rely=0.9, height=20, width=20)
+        self.send_file.configure(text='↑')
 
 
         self.conversation_context = []
