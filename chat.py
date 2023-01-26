@@ -84,9 +84,9 @@ class Toplevel1:
         '''This class configures and populates the toplevel window.
            top is the toplevel containing window.'''
 
-        top.geometry("600x450+468+138")
-        top.minsize(120, 1)
-        top.maxsize(1540, 845)
+        top.geometry("600x750+468+138")
+        top.minsize(600, 450)
+        top.maxsize(600, 750)
         top.resizable(1,  1)
         top.title("Chat-GPT")
         top.configure(background="#3c4773")
