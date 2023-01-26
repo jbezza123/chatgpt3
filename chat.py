@@ -74,6 +74,7 @@ def send_file(conversation_context, chatbox, avatar1, get_response_thread):
         chatbox.insert('end', "\n ", 'right')
         chatbox.window_create('end', window=tk.Label(chatbox, image=avatar1))
         chatbox.insert('end', '\n\n' + user_message + '\n\n\n', 'right')
+        chatbox.insert(END, "\n")
         thread = threading.Thread(target=get_response_thread, args=(user_message,))
         thread.start()
 
@@ -88,27 +89,28 @@ class Toplevel1:
         top.maxsize(1540, 845)
         top.resizable(1,  1)
         top.title("Chat-GPT")
-        top.configure(background="#7588cc")
+        top.configure(background="#3c4773")
 
         self.top = top
         
         self.chatbox = scrolledtext.ScrolledText(self.top)
         self.chatbox.place(relx=0.007, rely=0.067, relheight=0.787, relwidth=0.9845)
-        self.chatbox.configure(background="white")
+        self.chatbox.configure(background="#2d2d2e")
         self.chatbox.configure(font="-family {Segoe UI} -size 12")
-        self.chatbox.configure(foreground="black")
+        self.chatbox.configure(foreground="white")
         self.chatbox.configure(highlightbackground="#d9d9d9")
         self.chatbox.configure(highlightcolor="black")
         self.chatbox.configure(insertbackground="black")
         self.chatbox.configure(selectbackground="#c4c4c4")
         self.chatbox.configure(selectforeground="black")
         self.chatbox.configure(wrap='word')
+        self.chatbox.insert(END, """------------------------------------------Chat-GPT------------------------------------------""")
         
         self.userinput = tk.Text(self.top)
         self.userinput.place(relx=0.017, rely=0.867, relheight=0.12, relwidth=0.74)
-        self.userinput.configure(background="white")
+        self.userinput.configure(background="#2d2d2e")
         self.userinput.configure(font="TkTextFont")
-        self.userinput.configure(foreground="black")
+        self.userinput.configure(foreground="white")
         self.userinput.configure(highlightbackground="#d9d9d9")
         self.userinput.configure(highlightcolor="black")
         self.userinput.configure(insertbackground="black")
@@ -125,7 +127,7 @@ class Toplevel1:
         self.send.configure(disabledforeground="#a3a3a3")
         self.send.configure(font="-family {Segoe UI} -size 14 -weight bold")
         self.send.configure(foreground="#000000")
-        self.send.configure(highlightbackground="#d9d9d9")
+        self.send.configure(highlightbackground="#354b94")
         self.send.configure(highlightcolor="black")
         self.send.configure(pady="0")
         self.send.configure(text='''Send''')
@@ -137,13 +139,24 @@ class Toplevel1:
         self.save_conversation = tk.Button(self.top, command=lambda: save_conversation(self.conversation_context))
         self.save_conversation.place(relx=0.8, rely=0.01, height=24, width=50)
         self.save_conversation.configure(text='Save')
+        self.save_conversation.configure(background="#4b65bc")
+        self.save_conversation.configure(highlightbackground="#354b94")
+        self.save_conversation.configure(activebackground="#354b94")
+        
         self.load_conversation = tk.Button(self.top, command=lambda: load_conversation(self.conversation_context))
         self.load_conversation.place(relx=0.9, rely=0.01, height=24, width=50)
         self.load_conversation.configure(text='Load')
+        self.load_conversation.configure(background="#4b65bc")
+        self.load_conversation.configure(highlightbackground="#354b94")
+        self.load_conversation.configure(activebackground="#354b94")
+        
         self.photo = tk.PhotoImage(file="photo.png")
         self.send_file = tk.Button(self.top,image=self.photo, command=lambda: send_file(self.conversation_context, self.chatbox, self.avatar1, self.get_response_thread))
         self.send_file.place(relx=0.955, rely=0.9, height=20, width=20)
         self.send_file.configure(text='↑')
+        self.send_file.configure(background="#4b65bc")
+        self.send_file.configure(highlightbackground="#354b94")
+        self.send_file.configure(activebackground="#354b94")
 
 
         self.conversation_context = []
@@ -154,15 +167,18 @@ class Toplevel1:
 
     def handle_conversation(self):
         user_message = self.userinput.get("1.0", 'end-1c')
-        self.chatbox.tag_config('right', foreground='black', justify='right', background='light blue')
-        new_avatar = self.avatar1.copy()
-        self.chatbox.insert('end', "\n ", 'right')
-        self.chatbox.window_create('end', window=tk.Label(self.chatbox, image=self.avatar1))
-        self.chatbox.insert('end', '\n\n' + user_message + '\n\n\n', 'right')
-
-
-        thread = threading.Thread(target=self.get_response_thread, args=(user_message,))
-        thread.start()
+        if user_message == "":
+            pass
+        else:
+            self.chatbox.tag_config('right', foreground='black', justify='right', background='light blue')
+            new_avatar = self.avatar1.copy()
+            self.chatbox.insert('end', "\n ", 'right')
+            self.chatbox.window_create('end', window=tk.Label(self.chatbox, image=self.avatar1))
+            self.chatbox.insert('end', '\n\n' + user_message + '\n\n\n', 'right')
+            self.chatbox.insert(END, "\n")
+            thread = threading.Thread(target=self.get_response_thread, args=(user_message,))
+            thread.start()
+        
 
     
     def get_response_thread(self, user_message):
@@ -187,6 +203,7 @@ class Toplevel1:
         self.conversation_context.append(bot_response)
         self.userinput.delete("1.0", 'end')
         self.chatbox.see(END)
+        self.chatbox.insert(END, "\n")
             
 
 
@@ -201,5 +218,4 @@ if __name__ == '__main__':
     top.deiconify()
     Toplevel1(top)
     top.mainloop()
-
 
