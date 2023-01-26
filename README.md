@@ -48,6 +48,10 @@ press send
 * Does not remember previous conversations loaded from file.
 * Avatars follow the lastes messages - need to redraw previous messages.
 
+## Fixed issues
+
+* Included threading to stop gui freezing.
+
 
 
 ## Authors
