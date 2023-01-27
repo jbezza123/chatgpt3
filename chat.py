@@ -61,24 +61,30 @@ def save_conversation(conversation_context):
 
 def load_conversation(conversation_context):
     filepath = filedialog.askopenfilename(filetypes=[("Pickle Files", "*.pkl"), ("All Files", "*.*")])
+    file_name = os.path.basename(filepath)
     if filepath:
         with open(filepath, "rb") as f:
             conversation = pickle.load(f)
         conversation_context += conversation
+        return conversation_context, file_name
+    else:
+        return conversation_context, file_name
 
         
 def send_file(conversation_context, chatbox, avatar1, get_response_thread):
     filepath = filedialog.askopenfilename(filetypes=[("All Files", "*.*")])
+    file_name = os.path.basename(filepath)
     if filepath:
         with open(filepath, "r") as f:
             conversation = f.read()
         conversation_context.append(conversation)
         user_message = conversation
+        user_message = file_name + "\n\n" + user_message
         chatbox.tag_config('right', foreground='black', justify='right', background='light blue', wrap='word')
         new_avatar = avatar1.copy()
         chatbox.insert('end', "\n ", 'right')
-        chatbox.window_create('end', window=tk.Label(chatbox, image=avatar1))
-        chatbox.insert('end', '\n\n' + user_message + '\n\n\n', 'right')
+        chatbox.window_create('end', window=tk.Label(chatbox, image=avatar1,bd=0,padx=50))
+        chatbox.insert('end',' \n\n' + user_message + ' \n\n\n', 'right')
         chatbox.insert(END, "\n")
         thread = threading.Thread(target=get_response_thread, args=(user_message,))
         thread.start()
@@ -129,8 +135,9 @@ class Toplevel1:
         self.chatbox.configure(insertbackground="black")
         self.chatbox.configure(selectbackground="#c4c4c4")
         self.chatbox.configure(selectforeground="black")
-        self.chatbox.configure(wrap='word')
-        self.chatbox.insert(END, """------------------------------------------Chat-GPT------------------------------------------""")
+        self.chatbox.configure(wrap='word',padx=10,pady=10)
+        self.chatbox.insert(END, """-----------------------------------------Chat-GPT----------------------------------------\n""")
+        
 
         
         self.userinput = tk.Text(self.top)
@@ -161,6 +168,7 @@ class Toplevel1:
         self.send.configure(command=self.handle_conversation)
         
         self.avatar2 = tk.PhotoImage(file="chat.png")
+        
         self.avatar1 = tk.PhotoImage(file="avatar.png")
 
         self.save_conversation = tk.Button(self.top, command=lambda: save_conversation(self.conversation_context))
@@ -209,8 +217,8 @@ class Toplevel1:
             self.chatbox.tag_config('right', foreground='black', justify='right', background='light blue', wrap='word')
             new_avatar = self.avatar1.copy()
             self.chatbox.insert('end', "\n ", 'right')
-            self.chatbox.window_create('end', window=tk.Label(self.chatbox, image=self.avatar1))
-            self.chatbox.insert('end', '\n\n' + user_message + '\n\n\n', 'right')
+            self.chatbox.window_create('end', window=tk.Label(self.chatbox, image=self.avatar1,bd=0,padx=50))
+            self.chatbox.insert('end', ' \n\n' + user_message + ' \n\n\n', 'right')
             self.chatbox.insert(END, "\n")
             thread = threading.Thread(target=self.get_response_thread, args=(user_message,))
             thread.start()
@@ -236,11 +244,11 @@ class Toplevel1:
 
         self.chatbox.tag_config('left', foreground='black', background='light green', wrap='word')
         self.chatbox.insert('end', "\n ", 'left')
-        self.chatbox.window_create('end', window=tk.Label(self.chatbox, image=self.avatar2))
+        self.chatbox.window_create('end', window=tk.Label(self.chatbox, image=self.avatar2,bd=0,padx=50))
         if bot_response == "":
-            self.chatbox.insert('end', '\n\n' +"[No Response given]"+ '\n\n\n', 'left')
+            self.chatbox.insert('end', '\n\n ' +"[No Response given]"+ ' \n\n\n', 'left')
         else:
-            self.chatbox.insert('end', bot_response + '\n\n\n', 'left')
+            self.chatbox.insert('end', '\n ' + bot_response + '\n\n\n', 'left')
         self.conversation_context.append(user_message)
         self.conversation_context.append(bot_response)
         self.userinput.delete("1.0", 'end')
@@ -264,4 +272,3 @@ if __name__ == '__main__':
     top.deiconify()
     Toplevel1(top)
     top.mainloop()
-
