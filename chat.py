@@ -16,9 +16,11 @@ from tkinter import filedialog
 import pickle
 import datetime
 import threading
+import importlib
 
+       
 # Use your OpenAI API key
-openai.api_key = "use your own"
+openai.api_key = "use your own key"
 
 _script = sys.argv[0]
 _location = os.path.dirname(_script)
@@ -34,6 +36,9 @@ _tabbg1 = 'grey75'
 _tabbg2 = 'grey89' 
 _bgmode = 'light' 
 
+loadinga = False
+
+        
 def detect_code(string, languages=['html','css','php','ruby','python']):
     code_detected = re.search("(```("+'|'.join(languages)+")\n[\s\S]*?```)",string)
     if code_detected:
@@ -69,7 +74,7 @@ def send_file(conversation_context, chatbox, avatar1, get_response_thread):
             conversation = f.read()
         conversation_context.append(conversation)
         user_message = conversation
-        chatbox.tag_config('right', foreground='black', justify='right', background='light blue')
+        chatbox.tag_config('right', foreground='black', justify='right', background='light blue', wrap='word')
         new_avatar = avatar1.copy()
         chatbox.insert('end', "\n ", 'right')
         chatbox.window_create('end', window=tk.Label(chatbox, image=avatar1))
@@ -78,13 +83,32 @@ def send_file(conversation_context, chatbox, avatar1, get_response_thread):
         thread = threading.Thread(target=get_response_thread, args=(user_message,))
         thread.start()
 
+def loading(Label1):
+    while True:
+        try:
+            while loadinga:
+                Label1.config(text="""\\""")
+                time.sleep(0.2)
+                Label1.config(text="""|""")
+                time.sleep(0.2)
+                Label1.config(text="""/""")
+                time.sleep(0.2)
+                Label1.config(text="""-""")
+                time.sleep(0.2)
+
+            Label1.config(text="""""")
+        except Exception as e:
+            print(e)
+        time.sleep(1)
+
         
 class Toplevel1:
     def __init__(self, top=None):
+        
         '''This class configures and populates the toplevel window.
            top is the toplevel containing window.'''
 
-        top.geometry("600x750+468+138")
+        top.geometry("600x650+468+138")
         top.minsize(600, 450)
         top.maxsize(600, 750)
         top.resizable(1,  1)
@@ -92,6 +116,8 @@ class Toplevel1:
         top.configure(background="#3c4773")
 
         self.top = top
+
+        
         
         self.chatbox = scrolledtext.ScrolledText(self.top)
         self.chatbox.place(relx=0.007, rely=0.067, relheight=0.787, relwidth=0.9845)
@@ -105,6 +131,7 @@ class Toplevel1:
         self.chatbox.configure(selectforeground="black")
         self.chatbox.configure(wrap='word')
         self.chatbox.insert(END, """------------------------------------------Chat-GPT------------------------------------------""")
+
         
         self.userinput = tk.Text(self.top)
         self.userinput.place(relx=0.017, rely=0.867, relheight=0.12, relwidth=0.74)
@@ -158,19 +185,28 @@ class Toplevel1:
         self.send_file.configure(highlightbackground="#354b94")
         self.send_file.configure(activebackground="#354b94")
 
+        self.Label1 = tk.Label(self.top)
+        self.Label1.place(relx=0.737, rely=0.95, height=21, width=10)
+        self.Label1.configure(anchor='w')
+        self.Label1.configure(background="#2d2d2e")
+        self.Label1.configure(compound='left')
+        self.Label1.configure(disabledforeground="#a3a3a3")
+        self.Label1.configure(foreground="white")
+        self.Label1.configure(text='''''')
 
         self.conversation_context = []
+            
 
     def get_response(self, prompt):
         response = openai.Completion.create(engine="text-davinci-003", prompt=prompt, max_tokens=3000)
         return response["choices"][0]["text"]
 
-    def handle_conversation(self):
+    def handle_conversation(self): 
         user_message = self.userinput.get("1.0", 'end-1c')
         if user_message == "":
             pass
         else:
-            self.chatbox.tag_config('right', foreground='black', justify='right', background='light blue')
+            self.chatbox.tag_config('right', foreground='black', justify='right', background='light blue', wrap='word')
             new_avatar = self.avatar1.copy()
             self.chatbox.insert('end', "\n ", 'right')
             self.chatbox.window_create('end', window=tk.Label(self.chatbox, image=self.avatar1))
@@ -178,21 +214,27 @@ class Toplevel1:
             self.chatbox.insert(END, "\n")
             thread = threading.Thread(target=self.get_response_thread, args=(user_message,))
             thread.start()
-        
+            global loadinga
+            loadinga = True
+            thread = threading.Thread(target=loading, args=(self.Label1,))
+            thread.start()
+    
 
     
     def get_response_thread(self, user_message):
+        
         self.chatbox.see(END)
         response = openai.Completion.create(
             engine="text-davinci-003",
             prompt='\n'.join(self.conversation_context) + user_message,
-            max_tokens=1000
+            max_tokens=1048,
+            temperature=0
         )
         bot_response = response["choices"][0]["text"]
         bot_response = add_code_tags(bot_response)
         self.timestamp = datetime.datetime.now().strftime("[%Y-%m-%d %H:%M:%S] ")
 
-        self.chatbox.tag_config('left', foreground='black', background='light green')
+        self.chatbox.tag_config('left', foreground='black', background='light green', wrap='word')
         self.chatbox.insert('end', "\n ", 'left')
         self.chatbox.window_create('end', window=tk.Label(self.chatbox, image=self.avatar2))
         if bot_response == "":
@@ -204,9 +246,13 @@ class Toplevel1:
         self.userinput.delete("1.0", 'end')
         self.chatbox.see(END)
         self.chatbox.insert(END, "\n")
+        global loadinga
+        loadinga = False
+        
+    
             
 
-
+    
 
 if __name__ == '__main__':
     top = tk.Tk()
