@@ -20,7 +20,7 @@ import importlib
 
        
 # Use your OpenAI API key
-openai.api_key = "use your own key"
+openai.api_key = "USE YOUR OWN"
 
 _script = sys.argv[0]
 _location = os.path.dirname(_script)
@@ -59,14 +59,32 @@ def save_conversation(conversation_context):
             pickle.dump(conversation_context, f)
         print("Conversation saved to {}".format(filepath))
 
-def load_conversation(conversation_context):
+def load_conversation(conversation_context, chatbox, avatar1, avatar2):
     filepath = filedialog.askopenfilename(filetypes=[("Pickle Files", "*.pkl"), ("All Files", "*.*")])
     file_name = os.path.basename(filepath)
     if filepath:
         with open(filepath, "rb") as f:
             conversation = pickle.load(f)
         conversation_context += conversation
+        for index, element in enumerate(conversation):
+            if index % 2 == 0:
+                chatbox.tag_config('right', foreground='black', justify='right', background='light blue', wrap='word')
+                new_avatar = avatar1.copy()
+                chatbox.insert('end', "\n ", 'right')
+                chatbox.window_create('end', window=tk.Label(chatbox, image=avatar1,bd=0,padx=50))
+                chatbox.insert('end', ' \n\n' + element + ' \n\n\n', 'right')
+                chatbox.insert(END, "\n")
+            else:
+                new_avatar = avatar2.copy()
+                chatbox.tag_config('left', foreground='black', background='light green', wrap='word')
+                chatbox.insert('end', "\n ", 'left')
+                chatbox.window_create('end', window=tk.Label(chatbox, image=avatar2,bd=0,padx=50))
+                chatbox.insert('end', '\n\n ' +"[No Response given]"+ ' \n\n\n', 'left')
+                chatbox.insert('end', '\n ' + element + '\n\n\n', 'left')
+                chatbox.insert(END, "\n")
+                
         return conversation_context, file_name
+        
     else:
         return conversation_context, file_name
 
@@ -178,7 +196,7 @@ class Toplevel1:
         self.save_conversation.configure(highlightbackground="#354b94")
         self.save_conversation.configure(activebackground="#354b94")
         
-        self.load_conversation = tk.Button(self.top, command=lambda: load_conversation(self.conversation_context))
+        self.load_conversation = tk.Button(self.top, command=lambda: load_conversation(self.conversation_context,self.chatbox, self.avatar1, self.avatar2))
         self.load_conversation.place(relx=0.9, rely=0.01, height=24, width=50)
         self.load_conversation.configure(text='Load')
         self.load_conversation.configure(background="#4b65bc")
@@ -272,3 +290,4 @@ if __name__ == '__main__':
     top.deiconify()
     Toplevel1(top)
     top.mainloop()
+
