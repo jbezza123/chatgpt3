@@ -49,8 +49,8 @@ press send
 * [OpenAI](https://openai.com/) - GPT-3 API (if it is used)
 
 ## Known issues
-* Using the file upload button will only work mid conversation as the ai will getn confused and just wont reply afterwards
-* Loading previous conversations will not show in the chatbox, yet!
+* None!
+
 
 
 
@@ -59,7 +59,7 @@ press send
 * Included threading to stop gui freezing.
 * Avatars follow the lastes messages.
 * Does not remember previous conversations loaded from file.
-
+* Loading previous conversations will not show in the chatbox.
 
 ## Authors
 
