@@ -10,7 +10,8 @@ A simple GUI chatbot using OpenAI's GPT-3 API.
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
 ## Features
-* Send text based files `.txt`, `.html` `.php` `.py` `.js` `.css` `.xml` `.csv` `.rtf` `.md` `.json` `.log` `.yml` `.ini` `.conf` `.markdown` `.sql` `.java` `.c` `.cpp` `.h` `.sh` `.pl` etc...
+* Send text based files with file name `.txt`, `.html` `.php` `.py` `.js` `.css` `.xml` `.csv` `.rtf` `.md` `.json` `.log` `.yml` `.ini` `.conf` `.markdown` `.sql` `.java` `.c` `.cpp` `.h` `.sh` `.pl` etc...
+* Save/Load conversation.
 
 ### Prerequisites
 
@@ -49,6 +50,7 @@ press send
 
 ## Known issues
 * Using the file upload button will only work mid conversation as the ai will getn confused and just wont reply afterwards
+* Loading previous conversations will not show in the chatbox, yet!
 
 
 
