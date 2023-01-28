@@ -79,7 +79,6 @@ def load_conversation(conversation_context, chatbox, avatar1, avatar2):
                 chatbox.tag_config('left', foreground='black', background='light green', wrap='word')
                 chatbox.insert('end', "\n ", 'left')
                 chatbox.window_create('end', window=tk.Label(chatbox, image=avatar2,bd=0,padx=50))
-                chatbox.insert('end', '\n\n ' +"[No Response given]"+ ' \n\n\n', 'left')
                 chatbox.insert('end', '\n ' + element + '\n\n\n', 'left')
                 chatbox.insert(END, "\n")
                 
