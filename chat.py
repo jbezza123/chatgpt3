@@ -257,15 +257,16 @@ class Toplevel1:
         )
         bot_response = response["choices"][0]["text"]
         bot_response = add_code_tags(bot_response)
-        self.timestamp = datetime.datetime.now().strftime("[%Y-%m-%d %H:%M:%S] ")
-
         self.chatbox.tag_config('left', foreground='black', background='light green', wrap='word')
-        self.chatbox.insert('end', "\n ", 'left')
-        self.chatbox.window_create('end', window=tk.Label(self.chatbox, image=self.avatar2,bd=0,padx=50))
+        
         if bot_response == "":
-            self.chatbox.insert('end', '\n\n ' +"[No Response given]"+ ' \n\n\n', 'left')
+            #self.conversation_context.pop()
+            self.conversation_context.pop()# remove the last appended user_message
+            self.get_response_thread(user_message)
         else:
-            self.chatbox.insert('end', '\n ' + bot_response + '\n\n\n', 'left')
+            self.chatbox.insert('end', "\n ", 'left')
+            self.chatbox.window_create('end', window=tk.Label(self.chatbox, image=self.avatar2,bd=0,padx=50))
+            self.chatbox.insert('end', bot_response + '\n\n\n', 'left')
         self.conversation_context.append(user_message)
         self.conversation_context.append(bot_response)
         self.userinput.delete("1.0", 'end')
