@@ -13,6 +13,9 @@ These instructions will get you a copy of the project up and running on your loc
 * Send text based files with file name `.txt`, `.html` `.php` `.py` `.js` `.css` `.xml` `.csv` `.rtf` `.md` `.json` `.log` `.yml` `.ini` `.conf` `.markdown` `.sql` `.java` `.c` `.cpp` `.h` `.sh` `.pl` etc...
 * Save/Load conversation.
 
+### Updates
+* Added margins to chatbox
+
 ### Prerequisites
 
 You will need to have the following installed on your local machine:
