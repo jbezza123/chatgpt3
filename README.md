@@ -13,10 +13,10 @@ These instructions will get you a copy of the project up and running on your loc
 * Send text based files with file name `.txt`, `.html` `.php` `.py` `.js` `.css` `.xml` `.csv` `.rtf` `.md` `.json` `.log` `.yml` `.ini` `.conf` `.markdown` `.sql` `.java` `.c` `.cpp` `.h` `.sh` `.pl` etc...
 * Save/Load conversation.
 
-### Updates
+## Updates
 * Added margins to chatbox
 
-### Prerequisites
+## Prerequisites
 
 You will need to have the following installed on your local machine:
 
@@ -27,7 +27,7 @@ You will need to have the following installed on your local machine:
 - nltk `pip install nltk`
 - openai api key https://beta.openai.com/account/api-keys
 
-### Running the program
+## Running the program
 
 1. Clone the repository to your local machine
 git clone https://github.com/jbezza123/chatgpt3.git
