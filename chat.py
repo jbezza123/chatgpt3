@@ -247,33 +247,40 @@ class Toplevel1:
 
     
     def get_response_thread(self, user_message):
+        try:
+            self.chatbox.see(END)
+            response = openai.Completion.create(
+                engine="text-davinci-003",
+                prompt='\n'.join(self.conversation_context) + user_message,
+                max_tokens=1048,
+                temperature=0
+            )
+            bot_response = response["choices"][0]["text"]
+            bot_response = add_code_tags(bot_response)
+            self.chatbox.tag_config('left', foreground='black', background='light green', wrap='word')
         
-        self.chatbox.see(END)
-        response = openai.Completion.create(
-            engine="text-davinci-003",
-            prompt='\n'.join(self.conversation_context) + user_message,
-            max_tokens=1048,
-            temperature=0
-        )
-        bot_response = response["choices"][0]["text"]
-        bot_response = add_code_tags(bot_response)
-        self.chatbox.tag_config('left', foreground='black', background='light green', wrap='word')
-        
-        if bot_response == "":
-            #self.conversation_context.pop()
-            self.conversation_context.pop()# remove the last appended user_message
-            self.get_response_thread(user_message)
-        else:
+            if bot_response == "":
+                self.conversation_context.pop()# remove the last appended user_message
+                self.get_response_thread(user_message)
+            else:
+                self.chatbox.insert('end', "\n ", 'left')
+                self.chatbox.window_create('end', window=tk.Label(self.chatbox, image=self.avatar2,bd=0,padx=50))
+                self.chatbox.insert('end', bot_response + '\n\n\n', 'left')
+            self.conversation_context.append(user_message)
+            self.conversation_context.append(bot_response)
+            self.userinput.delete("1.0", 'end')
+            self.chatbox.see(END)
+            self.chatbox.insert(END, "\n")
+            global loadinga
+            loadinga = False
+        except openai.error.InvalidRequestError as e:
+            print(e)
+            self.chatbox.tag_config('left', foreground='black', background='light green', wrap='word')
             self.chatbox.insert('end', "\n ", 'left')
             self.chatbox.window_create('end', window=tk.Label(self.chatbox, image=self.avatar2,bd=0,padx=50))
-            self.chatbox.insert('end', bot_response + '\n\n\n', 'left')
-        self.conversation_context.append(user_message)
-        self.conversation_context.append(bot_response)
-        self.userinput.delete("1.0", 'end')
-        self.chatbox.see(END)
-        self.chatbox.insert(END, "\n")
-        global loadinga
-        loadinga = False
+            self.chatbox.insert('end', '\n' + str(e) + '\n\n\n', 'left')
+            global loadinga
+            loadinga = False
         
     
             
