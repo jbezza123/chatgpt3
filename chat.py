@@ -59,6 +59,11 @@ def save_conversation(conversation_context):
             pickle.dump(conversation_context, f)
         print("Conversation saved to {}".format(filepath))
 
+def clear_conversation(conversation_context, chatbox,):
+    conversation_context.clear()
+    chatbox.delete(1.0, END)
+    chatbox.insert(END, """-----------------------------------------Chat-GPT----------------------------------------\n""")
+
 def load_conversation(conversation_context, chatbox, avatar1, avatar2):
     filepath = filedialog.askopenfilename(filetypes=[("Pickle Files", "*.pkl"), ("All Files", "*.*")])
     file_name = os.path.basename(filepath)
@@ -201,6 +206,13 @@ class Toplevel1:
         self.load_conversation.configure(background="#4b65bc")
         self.load_conversation.configure(highlightbackground="#354b94")
         self.load_conversation.configure(activebackground="#354b94")
+
+        self.clear_conversation = tk.Button(self.top, command=lambda: clear_conversation(self.conversation_context,self.chatbox))
+        self.clear_conversation.place(relx=0.7, rely=0.01, height=24, width=50)
+        self.clear_conversation.configure(text='Clear')
+        self.clear_conversation.configure(background="#4b65bc")
+        self.clear_conversation.configure(highlightbackground="#354b94")
+        self.clear_conversation.configure(activebackground="#354b94")
         
         self.photo = tk.PhotoImage(file="photo.png")
         self.send_file = tk.Button(self.top,image=self.photo, command=lambda: send_file(self.conversation_context, self.chatbox, self.avatar1, self.get_response_thread))
@@ -279,7 +291,7 @@ class Toplevel1:
             self.chatbox.insert('end', "\n ", 'left')
             self.chatbox.window_create('end', window=tk.Label(self.chatbox, image=self.avatar2,bd=0,padx=50))
             self.chatbox.insert('end', '\n' + str(e) + '\n\n\n', 'left')
-            global loadinga
+            #global loadinga
             loadinga = False
         
     
@@ -297,4 +309,3 @@ if __name__ == '__main__':
     top.deiconify()
     Toplevel1(top)
     top.mainloop()
-
