@@ -17,10 +17,11 @@ import pickle
 import datetime
 import threading
 import importlib
+import speech_recognition as sr
 
        
 # Use your OpenAI API key
-openai.api_key = "USE YOUR OWN"
+openai.api_key = "USE YOUR OWN KEY"
 
 _script = sys.argv[0]
 _location = os.path.dirname(_script)
@@ -37,6 +38,36 @@ _tabbg2 = 'grey89'
 _bgmode = 'light' 
 
 loadinga = False
+count = 0
+
+def start_talk_conversation(conversation_context, chatbox, avatar1, avatar2, get_response_thread):
+    thread = threading.Thread(target=talk_conversation, args=(conversation_context, chatbox, avatar1, avatar2, get_response_thread))
+    thread.start()
+
+        
+def talk_conversation(conversation_context, chatbox, avatar1, avatar2, get_response_thread):
+    global count
+    if count == 0:
+        chatbox.tag_config('left', foreground='black', justify='left', background='light green', wrap='word')
+        new_avatar = avatar2.copy()
+        chatbox.insert('end', "\n ", 'left')
+        chatbox.window_create('end', window=tk.Label(chatbox, image=avatar2,bd=0,padx=50))
+        chatbox.insert('end',' \n\n' + " This is the Voice to text button, click then talk and your message will be sent to me!" + ' \n\n\n', 'left')
+        count += 1
+    else:
+        r = sr.Recognizer()
+        with sr.Microphone() as source:
+            audio = r.listen(source)
+            user_message = r.recognize_google(audio)
+            chatbox.insert(END, "\n")
+            chatbox.tag_config('right', foreground='black', justify='right', background='light blue', wrap='word')
+            new_avatar = avatar1.copy()
+            chatbox.insert('end', "\n ", 'right')
+            chatbox.window_create('end', window=tk.Label(chatbox, image=avatar1,bd=0,padx=50))
+            chatbox.insert('end',' \n\n' + user_message + ' \n\n\n', 'right')
+            chatbox.insert(END, "\n")
+            thread = threading.Thread(target=get_response_thread, args=(user_message,))
+            thread.start()
 
         
 def detect_code(string, languages=['html','css','php','ruby','python']):
@@ -213,6 +244,15 @@ class Toplevel1:
         self.clear_conversation.configure(background="#4b65bc")
         self.clear_conversation.configure(highlightbackground="#354b94")
         self.clear_conversation.configure(activebackground="#354b94")
+
+       
+
+        self.talk_conversation = tk.Button(self.top, command=lambda: start_talk_conversation(self.conversation_context, self.chatbox, self.avatar1, self.avatar2, self.get_response_thread))
+        self.talk_conversation.place(relx=0.77, rely=0.94, height=24, width=50)
+        self.talk_conversation.configure(text='Talk')
+        self.talk_conversation.configure(background="#4b65bc")
+        self.talk_conversation.configure(highlightbackground="#354b94")
+        self.talk_conversation.configure(activebackground="#354b94")
         
         self.photo = tk.PhotoImage(file="photo.png")
         self.send_file = tk.Button(self.top,image=self.photo, command=lambda: send_file(self.conversation_context, self.chatbox, self.avatar1, self.get_response_thread))
@@ -232,7 +272,8 @@ class Toplevel1:
         self.Label1.configure(text='''''')
 
         self.conversation_context = []
-            
+
+    
 
     def get_response(self, prompt):
         response = openai.Completion.create(engine="text-davinci-003", prompt=prompt, max_tokens=3000)
@@ -309,3 +350,4 @@ if __name__ == '__main__':
     top.deiconify()
     Toplevel1(top)
     top.mainloop()
+
