@@ -28,6 +28,10 @@ You will need to have the following installed on your local machine:
 - regex `pip install regex`
 - nltk `pip install nltk`
 - openai api key https://beta.openai.com/account/api-keys
+- regex `pip install regex`
+- pickle `pip install pickle` 
+- speech_recognition `pip install speechrecognition` 
+
 
 ## Running the program
 
