@@ -1,5 +1,9 @@
-sys
-tkinter
 regex
 nltk
+openai
 datetime
+time
+pickle
+threading
+importlib
+speechrecognition
