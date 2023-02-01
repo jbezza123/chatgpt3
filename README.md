@@ -16,6 +16,7 @@ These instructions will get you a copy of the project up and running on your loc
 ## Updates
 * Added margins to chatbox
 * Added clear button
+* Push to talk button
 
 ## Prerequisites
 
