@@ -3,7 +3,7 @@
 A simple GUI chatbot using OpenAI's GPT-3 API.
 
 ## Screenshots
-![Screenshot of the chatbot](screenshot1.png) ![Screenshot of the chatbot](screenshot2.png) ![Screenshot of the chatbot](screenshot3.png) 
+![Screenshot of the chatbot](screenshot_1.png) ![Screenshot of the chatbot](screenshot_2.png) ![Screenshot of the chatbot](screenshot_3.png) ![Screenshot of the chatbot](screenshot_4.png) 
 
 ## Getting Started
 
