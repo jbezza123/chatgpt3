@@ -18,10 +18,17 @@ import datetime
 import threading
 import importlib
 import speech_recognition as sr
+import requests
+import json
 
+from urllib.request import urlopen
+from io import BytesIO
+from PIL import Image, ImageTk
+
+QUERY_URL = "https://api.openai.com/v1/images/generations"
        
 # Use your OpenAI API key
-openai.api_key = "USE YOUR OWN KEY"
+openai.api_key = "USE YOUR OWN"
 
 _script = sys.argv[0]
 _location = os.path.dirname(_script)
@@ -39,6 +46,7 @@ _bgmode = 'light'
 
 loadinga = False
 count = 0
+tti = False
 
 def start_talk_conversation(conversation_context, chatbox, avatar1, avatar2, get_response_thread):
     thread = threading.Thread(target=talk_conversation, args=(conversation_context, chatbox, avatar1, avatar2, get_response_thread))
@@ -82,6 +90,31 @@ def add_code_tags(string):
     if code:
         string = string.replace(code, "<code>" + code + "</code>")
     return string
+
+def generate_image(prompt):
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {openai.api_key}"
+    }
+    data = """
+    {
+        """
+    data += f'"prompt": "{prompt}",'
+    data += """
+        "num_images":1,
+        "size":"1024x1024",
+        "response_format":"url"
+    }
+    """
+
+    resp = requests.post(QUERY_URL, headers=headers, data=data)
+
+    if resp.status_code != 200:
+        raise ValueError("Failed to generate image "+resp.text)
+
+    response_text = json.loads(resp.text)
+    return response_text['data'][0]['url']
+
 
 def save_conversation(conversation_context):
     filepath = filedialog.asksaveasfilename(defaultextension=".pkl", filetypes=[("Pickle Files", "*.pkl"), ("All Files", "*.*")])
@@ -159,6 +192,17 @@ def loading(Label1):
         except Exception as e:
             print(e)
         time.sleep(1)
+
+def togtti():
+    global tti
+    if tti == True:
+        tti = False
+        print("Text to Image is turned off")
+    elif tti == False:
+        tti = True
+        print("Text to Image is turned on")
+    else:
+        print("Could not change!")
 
         
 class Toplevel1:
@@ -262,6 +306,14 @@ class Toplevel1:
         self.send_file.configure(highlightbackground="#354b94")
         self.send_file.configure(activebackground="#354b94")
 
+        self.tti = tk.PhotoImage(file="tti.png")
+        self.send_file = tk.Checkbutton(self.top,image=self.tti, command=lambda: togtti())
+        self.send_file.place(relx=0.01, rely=0, height=40, width=60)
+        self.send_file.configure(text='↑')
+        self.send_file.configure(background="#3c4773")
+        self.send_file.configure(highlightbackground="#3c4773")
+        self.send_file.configure(activebackground="#3c4773")
+
         self.Label1 = tk.Label(self.top)
         self.Label1.place(relx=0.737, rely=0.95, height=21, width=10)
         self.Label1.configure(anchor='w')
@@ -272,6 +324,7 @@ class Toplevel1:
         self.Label1.configure(text='''''')
 
         self.conversation_context = []
+        self.previous_images = []
 
     
 
@@ -279,7 +332,7 @@ class Toplevel1:
         response = openai.Completion.create(engine="text-davinci-003", prompt=prompt, max_tokens=3000)
         return response["choices"][0]["text"]
 
-    def handle_conversation(self): 
+    def handle_conversation(self):
         user_message = self.userinput.get("1.0", 'end-1c')
         if user_message == "":
             pass
@@ -290,14 +343,58 @@ class Toplevel1:
             self.chatbox.window_create('end', window=tk.Label(self.chatbox, image=self.avatar1,bd=0,padx=50))
             self.chatbox.insert('end', ' \n\n' + user_message + ' \n\n\n', 'right')
             self.chatbox.insert(END, "\n")
-            thread = threading.Thread(target=self.get_response_thread, args=(user_message,))
-            thread.start()
+            global tti
             global loadinga
-            loadinga = True
-            thread = threading.Thread(target=loading, args=(self.Label1,))
-            thread.start()
-    
+            if tti == True:
+                thread = threading.Thread(target=self.get_response_image, args=(user_message,))
+                thread.start()
+                loadinga = True
+                thread = threading.Thread(target=loading, args=(self.Label1,))
+                thread.start()
 
+            
+            elif tti == False:
+                thread = threading.Thread(target=self.get_response_thread, args=(user_message,))
+                thread.start()
+                loadinga = True
+                thread = threading.Thread(target=loading, args=(self.Label1,))
+                thread.start()
+    def save_image(self, image_url):
+        file_name = filedialog.asksaveasfilename(defaultextension=".png", filetypes=[("PNG", "*.png")])
+        if file_name:
+            image_data = urlopen(image_url).read()
+            with open(file_name, "wb") as f:
+                f.write(image_data)
+    
+    def get_response_image(self, user_message):
+        prompt = user_message
+        image_url = generate_image(prompt)
+        print(f"Generated image URL: {image_url}")
+        
+        #--------------------------------------------------------------------------------------------
+        #--------------------------------------------------------------------------------------------
+        
+
+        # Open the URL image, resize it to fit the chatbox, and convert it to a PhotoImage object
+        self.image = Image.open(BytesIO(urlopen(image_url).read()))
+        self.image.thumbnail((500, 1000), Image.LANCZOS)
+        self.image = ImageTk.PhotoImage(self.image)
+        
+        self.chatbox.tag_config('left', foreground='black', background='light green', wrap='word')
+        self.chatbox.insert('end', "\n ", 'left')
+        self.chatbox.window_create('end', window=tk.Label(self.chatbox, image=self.avatar2,bd=0,padx=50))
+        self.chatbox.insert('end', '\n       ', 'left')
+        # Create a label widget and insert it into the chatbox
+        self.previous_images.append(self.image)
+        self.chatbox.window_create('end', window=tk.Label(self.chatbox, image=self.image, bd=0, padx=50))
+        self.chatbox.insert('end', '       ', 'left')
+        self.save_button = tk.Button(self.chatbox, text="Save", command=lambda: self.save_image(image_url))
+        self.chatbox.window_create('end', window=self.save_button)
+        self.chatbox.insert('end', '\n\n', 'left')
+        self.chatbox.insert(END, "\n")
+        global loadinga
+        loadinga = False
+        self.userinput.delete("1.0", 'end')
     
     def get_response_thread(self, user_message):
         try:
