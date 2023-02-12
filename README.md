@@ -17,6 +17,7 @@ These instructions will get you a copy of the project up and running on your loc
 * Added margins to chatbox
 * Added clear button
 * Push to talk button
+* Added Text to Image
 
 ## Prerequisites
 
@@ -58,7 +59,7 @@ press send
 * [OpenAI](https://openai.com/) - GPT-3 API (if it is used)
 
 ## Known issues
-* None!
+* images included generated and avatar prints on border when scrolling.
 
 
 
