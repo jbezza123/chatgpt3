@@ -18,6 +18,7 @@ These instructions will get you a copy of the project up and running on your loc
 * Added clear button
 * Push to talk button
 * Added Text to Image
+* Added Styles for Text to Image
 
 ## Prerequisites
 
