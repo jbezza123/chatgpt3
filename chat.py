@@ -20,6 +20,7 @@ import importlib
 import speech_recognition as sr
 import requests
 import json
+#import unknown_support
 
 from urllib.request import urlopen
 from io import BytesIO
@@ -204,7 +205,26 @@ def togtti():
     else:
         print("Could not change!")
 
-        
+_style_code_ran = 0
+def _style_code():
+    global _style_code_ran
+    if _style_code_ran:
+        return
+    style = ttk.Style()
+    if sys.platform == "win32":
+        style.theme_use('winnative')
+    style.configure('.',background=_bgcolor)
+    style.configure('.',foreground=_fgcolor)
+    style.configure('.',font='TkDefaultFont')
+    style.map('.',background =
+        [('selected', _compcolor), ('active',_ana2color)])
+    if _bgmode == 'dark':
+        style.map('.',foreground =
+            [('selected', 'white'), ('active','white')])
+    else:
+        style.map('.',foreground =
+            [('selected', 'black'), ('active','black')])
+    _style_code_ran = 1
 class Toplevel1:
     def __init__(self, top=None):
         
@@ -323,6 +343,14 @@ class Toplevel1:
         self.Label1.configure(foreground="white")
         self.Label1.configure(text='''''')
 
+        self.combobox = tk.StringVar()
+        _style_code()
+        self.TCombobox1 = ttk.Combobox(self.top)
+        self.TCombobox1.place(relx=0.12, rely=0.01, relheight=0.040, relwidth=0.238)
+        self.TCombobox1.configure(textvariable=self.combobox)
+        self.TCombobox1.configure(takefocus="")
+        self.TCombobox1['values'] = ['', 'Nightcafe', 'Artistic Portait', 'Bon Voyage', 'Photo', 'Epic', 'Dark Fantasy', 'Anime', 'Modern Comic', 'CGI Character', 'Neo Impressionist', 'Pop Art', 'B&W Portrait', 'Color Portrait', 'Oil Painting', 'Cosmic', 'Sinister', 'Candy', 'Cubist', '3D Game', 'Fantasy', 'Gouache', 'Matte', 'Charcoal', 'Horror', 'Surreal', 'Steampunk', 'Cyberpunk', 'Synthwave', 'Heavenly']
+
         self.conversation_context = []
         self.previous_images = []
 
@@ -365,9 +393,71 @@ class Toplevel1:
             image_data = urlopen(image_url).read()
             with open(file_name, "wb") as f:
                 f.write(image_data)
-    
+
     def get_response_image(self, user_message):
-        prompt = user_message
+        selected_value = self.combobox.get()
+        print(selected_value)
+        if selected_value == "Nightcafe":
+            prompt = user_message + " detailed matte painting, deep color, fantastical, intricate detail, splash screen, complementary colors, fantasy concept art, 8k resolution trending on Artstation Unreal Engine 5"
+        if selected_value == "Artistic Portait":
+            prompt = user_message + " head and shoulders portrait, 8k resolution concept art portrait by Greg Rutkowski, Artgerm, WLOP, Alphonse Mucha dynamic lighting hyperdetailed intricately detailed Splash art trending on Artstation triadic colors Unreal Engine 5 volumetric lighting"
+        if selected_value == "Bon Voyage":
+            prompt = user_message + " 8k resolution concept art by Greg Rutkowski dynamic lighting hyperdetailed intricately detailed Splash art trending on Artstation triadic colors Unreal Engine 5 volumetric lighting Alphonse Mucha WLOP Jordan Grimmer orange and teal"
+        if selected_value == "Photo":
+            prompt = user_message + " Professional photography, bokeh, natural lighting, canon lens, shot on dslr 64 megapixels sharp focus"
+        if selected_value == "Epic":
+            prompt = user_message + " Epic cinematic brilliant stunning intricate meticulously detailed dramatic atmospheric maximalist digital matte painting"
+        if selected_value == "Dark Fantasy":
+            prompt = user_message + " a masterpiece, 8k resolution, dark fantasy concept art, by Greg Rutkowski, dynamic lighting, hyperdetailed, intricately detailed, Splash screen art, trending on Artstation, deep color, Unreal Engine, volumetric lighting, Alphonse Mucha, Jordan Grimmer, purple and yellow complementary colours"
+        if selected_value == "Anime":
+            prompt = user_message + " Studio Ghibli, Anime Key Visual, by Makoto Shinkai, Deep Color, Intricate, 8k resolution concept art, Natural Lighting, Beautiful Composition"
+        if selected_value == "Modern Comic":
+            prompt = user_message + " Mark Brooks and Dan Mumford, comic book art, perfect, smooth"
+        if selected_value == "CGI Character":
+            prompt = user_message + " Pixar, Disney, concept art, 3d digital art, Maya 3D, ZBrush Central 3D shading, bright colored background, radial gradient background, cinematic, Reimagined by industrial light and magic, 4k resolution post processing"
+        if selected_value == "Neo Impressionist":
+            prompt = user_message + " neo-impressionism expressionist style oil painting, smooth post-impressionist impasto acrylic painting, thick layers of colourful textured paint"
+        if selected_value == "Pop Art":
+            prompt = user_message + " Screen print, pop art, splash screen art, triadic colors, digital art, 8k resolution trending on Artstation, golden ratio, symmetrical, rule of thirds, geometric bauhaus"
+        if selected_value == "B&W Portrait":
+            prompt = user_message + " Close up portrait, ambient light, Nikon 15mm f/1.8G, by Lee Jeffries, Alessio Albi, Adrian Kuipers"
+        if selected_value == "Color Portrait":
+            prompt = user_message + " Close-up portrait, color portrait, Linkedin profile picture, professional portrait photography by Martin Schoeller, by Mark Mann, by Steve McCurry, bokeh, studio lighting, canon lens, shot on dslr, 64 megapixels, sharp focus"
+        if selected_value == "Oil Painting":
+            prompt = user_message + " oil painting by James Gurney"
+        if selected_value == "Cosmic":
+            prompt = user_message + " 8k resolution holographic astral cosmic illustration mixed media by Pablo Amaringo"
+        if selected_value == "Sinister":
+            prompt = user_message + " sinister by Greg Rutkowski"
+        if selected_value == "Candy":
+            prompt = user_message + " vibrant colors Candyland wonderland gouache swirls detailed"
+        if selected_value == "Cubist":
+            prompt = user_message + " abstract cubism Euclidean Georgy Kurasov Albert Gleizes"
+        if selected_value == "3D Game":
+            prompt = user_message + " trending on Artstation Unreal Engine 3D shading shadow depth"
+        if selected_value == "Fantasy":
+            prompt = user_message + " ethereal fantasy hyperdetailed mist Thomas Kinkade"
+        if selected_value == "Gouache":
+            prompt = user_message + " gouache detailed painting"
+        if selected_value == "Matte":
+            prompt = user_message + " detailed matte painting"
+        if selected_value == "Charcoal":
+            prompt = user_message + " hyperdetailed charcoal drawing"
+        if selected_value == "Horror":
+            prompt = user_message + " horror Gustave Doré Greg Rutkowski"
+        if selected_value == "Surreal":
+            prompt = user_message + " surrealism Salvador Dali matte background melting oil on canvas"
+        if selected_value == "Steampunk":
+            prompt = user_message + " steampunk engine"
+        if selected_value == "Cyberpunk":
+            prompt = user_message + " cyberpunk 2099 blade runner 2049 neon"
+        if selected_value == "Synthwave":
+            prompt = user_message + " synthwave neon retro"
+        if selected_value == "Heavenly":
+            prompt = user_message + " heavenly sunshine beams divine bright soft focus holy in the clouds"
+        elif selected_value == "":
+            prompt = user_message
+            
         image_url = generate_image(prompt)
         print(f"Generated image URL: {image_url}")
         
