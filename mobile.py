@@ -29,7 +29,7 @@ from PIL import Image, ImageTk
 QUERY_URL = "https://api.openai.com/v1/images/generations"
        
 # Use your OpenAI API key
-openai.api_key = "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"
+openai.api_key = "USE YOUR OWN"
 
 _script = sys.argv[0]
 _location = os.path.dirname(_script)
