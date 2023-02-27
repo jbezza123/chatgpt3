@@ -29,7 +29,7 @@ from PIL import Image, ImageTk
 QUERY_URL = "https://api.openai.com/v1/images/generations"
        
 # Use your OpenAI API key
-openai.api_key = "USE YOU OWN"
+openai.api_key = "use your own"
 
 _script = sys.argv[0]
 _location = os.path.dirname(_script)
@@ -474,7 +474,8 @@ class Toplevel1:
                 thread = threading.Thread(target=loading, args=(self.Label1,))
                 thread.start()
     def save_image(self, image_url):
-        file_name = filedialog.asksaveasfilename(defaultextension=".png", filetypes=[("PNG", "*.png")])
+        file_name = os.path.basename(image_url)
+        file_name = filedialog.asksaveasfilename(defaultextension=".png", initialfile=file_name, filetypes=[("PNG", "*.png")])
         if file_name:
             image_data = urlopen(image_url).read()
             with open(file_name, "wb") as f:
