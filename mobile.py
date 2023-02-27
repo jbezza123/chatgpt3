@@ -29,7 +29,7 @@ from PIL import Image, ImageTk
 QUERY_URL = "https://api.openai.com/v1/images/generations"
        
 # Use your OpenAI API key
-openai.api_key = "USE YOUR OWN"
+openai.api_key = "USE YOU OWN"
 
 _script = sys.argv[0]
 _location = os.path.dirname(_script)
@@ -126,7 +126,7 @@ def save_conversation(conversation_context):
 def clear_conversation(conversation_context, chatbox,):
     conversation_context.clear()
     chatbox.delete(1.0, END)
-    chatbox.insert(END, """-----------------------------------------Chat-GPT----------------------------------------\n""")
+    chatbox.insert(END, """----------------------------------------Chat-GPT----------------------------------------\n""")
 
 def load_conversation(conversation_context, chatbox, avatar1, avatar2):
     filepath = filedialog.askopenfilename(filetypes=[("Pickle Files", "*.pkl"), ("All Files", "*.*")])
@@ -363,7 +363,7 @@ class Toplevel1:
 
 
         # Create the keyboard frame
-        self.keyboard_frame = tk.Frame(self.top)
+        self.keyboard_frame = tk.Frame(self.top, width=300)
         self.keyboard_frame.pack_forget()
         
         # Define the keyboard layout
@@ -404,7 +404,7 @@ class Toplevel1:
             #self.button.grid(row=i//10, column=i%10, padx=2, pady=2)
 
         for i, key in enumerate(self.key_list):
-            self.button = tk.Button(self.keyboard_frame, text=key, width=3)
+            self.button = tk.Button(self.keyboard_frame, text=key, width=1)
             self.button.grid(row=i//10, column=i%10, padx=2, pady=2)
     
             # Bind the button click event to a function
